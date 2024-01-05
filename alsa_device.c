@@ -122,7 +122,7 @@ AlsaDevice *alsa_device_open(char *device_name, unsigned int rate, int channels,
    if ((err = snd_pcm_hw_params_set_periods (dev->capture_handle, hw_params, 2, 0)) < 0) {
       fprintf (stderr, "cannot set number of periods (%s)\n",
                snd_strerror (err));
-      assert(0);
+      //assert(0);
    }
 
    buffer_size = period_size * 2;
@@ -217,7 +217,7 @@ AlsaDevice *alsa_device_open(char *device_name, unsigned int rate, int channels,
    if ((err = snd_pcm_hw_params_set_periods (dev->playback_handle, hw_params, 2, 0)) < 0) {
       fprintf (stderr, "cannot set number of periods (%s)\n",
                snd_strerror (err));
-      assert(0);
+      //assert(0);
    }
    buffer_size = period_size * 2;
    dir=0;
@@ -379,7 +379,7 @@ int alsa_device_capture_ready(AlsaDevice *dev, struct pollfd *pfds, unsigned int
    int err;
    if ((err = snd_pcm_poll_descriptors_revents(dev->capture_handle, pfds, dev->readN, &revents)) < 0)
    {
-      //cerr << "error in snd_pcm_poll_descriptors_revents for capture: " << snd_strerror (err) << endl;
+      //fprintf(stderr, "error in snd_pcm_poll_descriptors_revents for capture: %s\n", snd_strerror (err));
       //FIXME: This is a kludge
       fprintf (stderr, "error in alsa_device_capture_ready: %s\n", snd_strerror (err));
       return pfds[0].revents & POLLIN;
@@ -394,7 +394,7 @@ int alsa_device_playback_ready(AlsaDevice *dev, struct pollfd *pfds, unsigned in
    int err;
    if ((err = snd_pcm_poll_descriptors_revents(dev->playback_handle, pfds+dev->readN, dev->writeN, &revents)) < 0)
    {
-      //cerr << "error in snd_pcm_poll_descriptors_revents for playback: " << snd_strerror (err) << endl;
+      //fprintf(stderr, "error in snd_pcm_poll_descriptors_revents for playback: %s\n", snd_strerror(err));
       //FIXME: This is a kludge
       fprintf (stderr, "error in alsa_device_playback_ready: %s\n", snd_strerror (err));
       return pfds[1].revents & POLLOUT;
